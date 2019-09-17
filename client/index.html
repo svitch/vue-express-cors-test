@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>CORS testing</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap&subset=cyrillic">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style> body { font-family: 'Open Sans', sans-serif; } </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <div class="p-4">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <button
+            class="btn btn-sm"
+            :class="'btn-' + btnColor"
+            @click.prevent="getUser"
+          >
+            Get User ID
+          </button>
+        </div>
+        <div class="col">
+          <div
+            class="font-weight-bold"
+            :class="'text-' + userColor"
+          >
+            {{ userId }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          userColor: 'secondary',
+          userId: "Click the button",
+          btnColor: 'secondary'
+        }
+      },
+      methods: {
+        getUser() {
+          const randId = Math.random().toString(36).substring(2, 35);
+          axios.get(`http://localhost:3000/user/${randId}`)
+            .then(res => {
+              this.userColor = 'success';
+              this.userId = res.data.userId;
+              this.btnColor = 'success';
+            })
+            .catch(error => {
+              this.userColor = 'danger';
+              this.userId = error;
+              this.btnColor = 'secondary';
+            });
+        },
+      }
+    })
+  </script>
+
+</body>
+</html>
